@@ -13,7 +13,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import ReactMarkdown from 'react-markdown';
 
-const BACKEND_URL = 'https://bc56c55d02fb.ngrok-free.app';
+const BACKEND_URL = 'http://localhost:8000';
 
 interface Message {
   id: string;
@@ -65,7 +65,7 @@ export function Chat({ className, pageContext }: ChatProps) {
       // Обращаемся к новому эндпоинту-оркестратору
       const response = await fetch(`${BACKEND_URL}/api/orchestrate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: currentInput, model: currentModel, context: pageContext }),
       });
 
@@ -163,7 +163,7 @@ ${data.new_prompt}
     try {
       const response = await fetch(`${BACKEND_URL}/api/text-to-speech`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),
       });
 
@@ -217,7 +217,6 @@ ${data.new_prompt}
           try {
             const response = await fetch(`${BACKEND_URL}/api/speech-to-text`, {
               method: 'POST',
-              headers: { 'ngrok-skip-browser-warning': 'true' },
               body: formData,
             });
 

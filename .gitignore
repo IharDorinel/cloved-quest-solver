@@ -13,7 +13,14 @@ dist-ssr
 *.local
 
 # Editor directories and files
-backend/
+# УДАЛЯЕМ строку ниже, чтобы бэкенд НЕ игнорировался
+# backend/
+
+# Игнорируем специфичные для Python и бэкенда файлы
+backend/.env
+backend/__pycache__/
+backend/venv/
+
 .vscode/*
 !.vscode/extensions.json
 .idea

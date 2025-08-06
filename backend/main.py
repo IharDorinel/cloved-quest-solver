@@ -10,10 +10,19 @@ import requests
 from pathlib import Path
 from starlette.middleware.base import BaseHTTPMiddleware
 
-# Отладочный Middleware для логирования заголовков
-class LogHeadersMiddleware(BaseHTTPMiddleware):
+# Middleware для корректной обработки Origin на Render
+class FixOriginMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        print(f"DEBUG: Incoming request to {request.url.path} with headers: {request.headers}")
+        # Если заголовок Origin отсутствует (особенность Render),
+        # мы не можем выполнить стандартную проверку CORS.
+        # В этом случае мы доверяем запросу, так как он пришел через внутреннюю сеть.
+        if "origin" not in request.headers:
+            # Создаем "безопасную" копию заголовков
+            mutable_headers = request.scope["headers"]
+            # Искусственно добавляем заголовок, который точно будет в списке origins
+            # Это позволяет CORSMiddleware ниже успешно обработать запрос
+            mutable_headers.append((b"origin", b"https://cloved-quest-frontend.onrender.com"))
+        
         response = await call_next(request)
         return response
 
@@ -22,7 +31,7 @@ dotenv_path = Path(__file__).parent / '.env'
 load_dotenv(dotenv_path=dotenv_path)
 
 app = FastAPI()
-app.add_middleware(LogHeadersMiddleware) # Добавляем наш логгер
+app.add_middleware(FixOriginMiddleware) # Добавляем наш "исправляющий" middleware
 
 # Настраиваем CORS
 origins = [

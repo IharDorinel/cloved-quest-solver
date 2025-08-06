@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Request
+from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
@@ -9,30 +9,15 @@ from dotenv import load_dotenv
 import json
 import requests
 from pathlib import Path
-from starlette.middleware.base import BaseHTTPMiddleware
-
-# Отладочный Middleware для логирования заголовков
-class LogHeadersMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        print(f"--- RAW HEADERS for {request.method} {request.url.path} ---")
-        print(dict(request.headers))
-        print("--- END RAW HEADERS ---")
-        response = await call_next(request)
-        return response
 
 # Загружаем переменные окружения из .env файла
 dotenv_path = Path(__file__).parent / '.env'
 load_dotenv(dotenv_path=dotenv_path)
 
 app = FastAPI()
-app.add_middleware(LogHeadersMiddleware) # Возвращаем логгер
 
 # Настраиваем CORS
-origins = [
-    "http://localhost:8080",
-    "http://localhost:5173",
-    "https://cloved-quest-frontend.onrender.com",
-]
+origins = ["*"] 
 
 app.add_middleware(
     CORSMiddleware,
@@ -41,15 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# ПРЯМОЙ ОБРАБОТЧИК ДЛЯ OPTIONS ЗАПРОСОВ
-@app.options("/{full_path:path}")
-async def options_handler(full_path: str):
-    return Response(status_code=200)
-
-# Устанавливаем API ключи из переменных окружения
-openai.api_key = os.getenv("OPENAI_API_KEY")
-ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
 
 # --- Модели Pydantic ---
 

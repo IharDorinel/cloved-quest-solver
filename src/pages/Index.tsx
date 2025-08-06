@@ -62,7 +62,6 @@ const Index = () => {
         <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
           Universal Chat
         </h1>
-        <p className="text-sm text-foreground-muted">Powered by AI • Hackathon Demo</p>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -8,12 +8,21 @@ from dotenv import load_dotenv
 import json
 import requests
 from pathlib import Path
+from starlette.middleware.base import BaseHTTPMiddleware
+
+# Отладочный Middleware для логирования заголовков
+class LogHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        print(f"DEBUG: Incoming request to {request.url.path} with headers: {request.headers}")
+        response = await call_next(request)
+        return response
 
 # Загружаем переменные окружения из .env файла
 dotenv_path = Path(__file__).parent / '.env'
 load_dotenv(dotenv_path=dotenv_path)
 
 app = FastAPI()
+app.add_middleware(LogHeadersMiddleware) # Добавляем наш логгер
 
 # Настраиваем CORS
 origins = [

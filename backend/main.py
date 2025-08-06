@@ -16,11 +16,7 @@ load_dotenv(dotenv_path=dotenv_path)
 app = FastAPI()
 
 # Настраиваем CORS
-origins = [
-    "http://localhost:8080",
-    "http://localhost:5173",
-    "https://cloved-quest-frontend.onrender.com",
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,

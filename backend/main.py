@@ -19,6 +19,7 @@ app = FastAPI()
 origins = [
     "http://localhost:8080",
     "http://localhost:5173",
+    "https://cloved-quest-frontend.onrender.com",
 ]
 
 app.add_middleware(

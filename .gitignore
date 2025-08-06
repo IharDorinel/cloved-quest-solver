@@ -20,6 +20,7 @@ dist-ssr
 backend/.env
 backend/__pycache__/
 backend/venv/
+backend/worker_prompt.txt
 
 .vscode/*
 !.vscode/extensions.json

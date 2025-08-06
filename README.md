@@ -1,73 +1,71 @@
-# Welcome to your Lovable project
+# Cloved Quest Solver
 
-## Project info
+Это full-stack приложение, состоящее из фронтенда на React (Vite, shadcn-ui) и бэкенда на Python (FastAPI), предназначенное для демонстрации работы многоагентной системы чата.
 
-**URL**: https://lovable.dev/projects/24672142-f9ea-4885-9f03-470eb87dabad
+## Требования
 
-## How can I edit this code?
+Перед началом работы убедитесь, что у вас установлены:
 
-There are several ways of editing your application.
+- **Node.js**: v18 или выше. Рекомендуется использовать [nvm](https://github.com/nvm-sh/nvm) для управления версиями.
+- **Python**: v3.8 или выше.
+- **Git** для клонирования репозитория.
 
-**Use Lovable**
+## Установка и запуск
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/24672142-f9ea-4885-9f03-470eb87dabad) and start prompting.
+Для запуска проекта необходимо одновременно запустить сервер бэкенда и сервер фронтенда в двух разных терминалах.
 
-Changes made via Lovable will be committed automatically to this repo.
+### 1. Клонирование репозитория
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+git clone https://github.com/IharDorinel/cloved-quest-solver.git
+cd cloved-quest-solver
 ```
 
-**Edit a file directly in GitHub**
+### 2. Настройка Бэкенда (Python)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Бэкенду требуются API-ключи для работы с сервисами OpenAI и ElevenLabs.
 
-**Use GitHub Codespaces**
+1.  **Создайте файл `.env`**: В папке `backend` создайте файл с названием `.env`.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+2.  **Добавьте ключи**: Скопируйте в этот файл следующее содержимое и замените `ВАШ_КЛЮЧ` на ваши реальные API-ключи:
 
-## What technologies are used for this project?
+    ```text
+    OPENAI_API_KEY="ВАШ_КЛЮЧ_OPENAI"
+    ELEVENLABS_API_KEY="ВАШ_КЛЮЧ_ELEVENLABS"
+    ```
+    > **Важно:** Файл `.env` уже добавлен в `.gitignore`, поэтому ваши ключи не попадут в репозиторий.
 
-This project is built with:
+3.  **Установите зависимости Python**: Выполните команду из **корневой папки** проекта:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+    ```bash
+    pip install -r backend/requirements.txt
+    ```
 
-## How can I deploy this project?
+### 3. Настройка Фронтенда (React)
 
-Simply open [Lovable](https://lovable.dev/projects/24672142-f9ea-4885-9f03-470eb87dabad) and click on Share -> Publish.
+1.  **Установите зависимости Node.js**: Выполните команду из **корневой папки** проекта:
+    ```bash
+    npm install
+    ```
 
-## Can I connect a custom domain to my Lovable project?
+## Запуск приложения
 
-Yes, you can!
+Откройте два терминала в корневой папке проекта.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+**В первом терминале — запустите бэкенд:**
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```bash
+uvicorn backend.main:app --reload
+```
+Вы должны увидеть сообщение, что сервер запущен по адресу `http://127.0.0.1:8000`.
+
+**Во втором терминале — запустите фронтенд:**
+
+```bash
+npm run dev
+```
+Вы должны увидеть сообщение, что сервер для разработки запущен по адресу `http://localhost:8080/`.
+
+### 4. Откройте приложение
+
+Теперь вы можете открыть ваш браузер и перейти по адресу [http://localhost:8080/](http://localhost:8080/), чтобы увидеть работающее приложение.

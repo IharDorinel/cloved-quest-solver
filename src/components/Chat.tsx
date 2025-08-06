@@ -13,7 +13,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import ReactMarkdown from 'react-markdown';
 
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL = 'https://cloved-quest-solver.onrender.com';
 
 interface Message {
   id: string;

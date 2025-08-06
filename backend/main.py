@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Request
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -10,19 +11,12 @@ import requests
 from pathlib import Path
 from starlette.middleware.base import BaseHTTPMiddleware
 
-# Middleware для корректной обработки Origin на Render
-class FixOriginMiddleware(BaseHTTPMiddleware):
+# Отладочный Middleware для логирования заголовков
+class LogHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # Если заголовок Origin отсутствует (особенность Render),
-        # мы не можем выполнить стандартную проверку CORS.
-        # В этом случае мы доверяем запросу, так как он пришел через внутреннюю сеть.
-        if "origin" not in request.headers:
-            # Создаем "безопасную" копию заголовков
-            mutable_headers = request.scope["headers"]
-            # Искусственно добавляем заголовок, который точно будет в списке origins
-            # Это позволяет CORSMiddleware ниже успешно обработать запрос
-            mutable_headers.append((b"origin", b"https://cloved-quest-frontend.onrender.com"))
-        
+        print(f"--- RAW HEADERS for {request.method} {request.url.path} ---")
+        print(dict(request.headers))
+        print("--- END RAW HEADERS ---")
         response = await call_next(request)
         return response
 
@@ -31,7 +25,7 @@ dotenv_path = Path(__file__).parent / '.env'
 load_dotenv(dotenv_path=dotenv_path)
 
 app = FastAPI()
-app.add_middleware(FixOriginMiddleware) # Добавляем наш "исправляющий" middleware
+app.add_middleware(LogHeadersMiddleware) # Возвращаем логгер
 
 # Настраиваем CORS
 origins = [
@@ -47,6 +41,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ПРЯМОЙ ОБРАБОТЧИК ДЛЯ OPTIONS ЗАПРОСОВ
+@app.options("/{full_path:path}")
+async def options_handler(full_path: str):
+    return Response(status_code=200)
 
 # Устанавливаем API ключи из переменных окружения
 openai.api_key = os.getenv("OPENAI_API_KEY")
